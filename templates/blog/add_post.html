@@ -1,0 +1,64 @@
+<!-- add_post.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Post</title>
+</head>
+
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_title">Title:</label><br>
+        {{ form.title }}
+        <br>
+        <label for="id_content">Content:</label><br>
+        {{ form.content }}
+        <br>
+        {{ form.Tag }}
+        <label for="id_tags">Tags:</label><br>
+        <input type="text" id="tag-search" placeholder="Search tags...">
+        <select name="tags" id="tag-select" multiple>
+            {% for tag in tags %}
+            <option value="{{ tag.name }}">{{ tag.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <input type="text" id="selected-tags" name="selected_tags">
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tagSearchInput = document.getElementById('tag-search');
+            const tagSelect = document.getElementById('tag-select');
+            const selectedTagsInput = document.getElementById('selected-tags');
+
+            tagSearchInput.addEventListener('input', function () {
+                const searchQuery = this.value.trim().toLowerCase();
+                Array.from(tagSelect.options).forEach(option => {
+                    const tagText = option.textContent.toLowerCase();
+                    if (tagText.includes(searchQuery)) {
+                        option.style.display = '';
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+            });
+
+            tagSelect.addEventListener('change', function () {
+                const selectedTags = Array.from(this.selectedOptions).map(option => option.textContent);
+                const existingTags = selectedTagsInput.value.split(', ');
+                const combinedTags = existingTags.concat(selectedTags.filter(tag => !existingTags.includes(tag)));
+                selectedTagsInput.value = combinedTags.join(', ');
+                console.log(selectedTagsInput.value)
+            });
+
+        });
+
+    </script>
+</body>
+
+</html>

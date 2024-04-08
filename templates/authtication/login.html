@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<h2>Login</h2>
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username" required><br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password" required><br>
+    <button type="submit">Login</button>
+</form>
+<p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+{% if errors %}
+<div class="error-box" id="error-box">
+    <button class="" onclick=" closeErrorBox()">✖</button>
+    <p>There were errors in the form:</p>
+    <ul>
+        {% for field, error_list in errors.items %}
+        {% for error in error_list %}
+        <li>{{ error }}</li>
+        {% endfor %}
+        {% endfor %}
+    </ul>
+</div>
+<script>
+    function closeErrorBox() {
+        var errorBox = document.getElementById('error-box');
+        errorBox.style.display = 'none';
+    }
+</script>
+{% endif %}
+
+{% endblock %}
